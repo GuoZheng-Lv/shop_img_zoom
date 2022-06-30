@@ -1,13 +1,13 @@
 <template>
   <div class="spec-preview">
     <!-- //图片地址  传参 -->
-    <img :src="ImageList.imgUrl" />
+    <img :src="skuImageList || sup" />
     <!--   //定义鼠标事件 -->
     <div class="event" @mousemove="handler"></div>
     <!--  //定义放大后的图样式 -->
     <div class="big">
       <!--   //放大后的图的原始图片  -->
-      <img :src="ImageList.imgUrl" ref="big" />
+      <img :src="skuImageList || sup" ref="big" />
     </div>
     <!-- 遮罩层 -->
     <div class="mask" ref="mask"></div>
@@ -18,7 +18,14 @@
 export default {
   name: 'Zoom',
   // 使用props传参
-  props: ['skuImageList'],
+  props:{
+    sup:{
+    type:String,
+    },
+    skuImageList:{
+      type:String,
+    },
+  },
   data() {
     return {
       currentIndex: 0
@@ -31,9 +38,9 @@ export default {
   },
   mounted() {
     //全局事件总线获取兄弟组件传递过来的索引值
-    this.$bus.$on('getIndex', index => {
+    /* this.$bus.$on('getIndex', index => {
       this.currentIndex = index;
-    });
+    }); */
   },
   methods: {
     //这里是放大方法的主要处理逻辑
@@ -51,19 +58,20 @@ export default {
       mask.style.top = top + 'px';
       big.style.left = -2 * left + 'px';
       big.style.top = -2 * top + 'px';
-      console.log(left);
     }
   }
 };
 </script>
 
 <style lang="scss" scoped>
+// img原大小框
 .spec-preview {
   position: relative;
-  width: 400px;
-  height: 400px;
+  width: 500px;
+  height: 500px;
   border: 1px solid #ccc;
 
+  // 原大小
   img {
     width: 100%;
     height: 100%;
@@ -87,10 +95,10 @@ export default {
     top: 0;
     display: none;
   }
-
+  // 放大的照片大小
   .big {
     width: 100%;
-    height: 100%;
+    height: 87%;
     position: absolute;
     top: -1px;
     left: 100%;
@@ -99,7 +107,7 @@ export default {
     z-index: 998;
     display: none;
     background: white;
-
+  margin-left: 20px;
     img {
       width: 200%;
       max-width: 200%;
